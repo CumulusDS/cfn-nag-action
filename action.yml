@@ -30,16 +30,11 @@ runs:
     - name: scan
       id: scan
       run: |
+        echo Scanning... && echo ""
         results=$(cfn_nag_scan ${{ inputs.args }} --input-path "${{ inputs.path }}")
         results="${results//'%'/'%25'}"
         results="${results//$'\n'/'%0A'}"
         results="${results//$'\r'/'%0D'}"
         echo "::set-output name=results::$(echo "$results")"
-      shell: bash
-    - name: Print Output
-      id: print
-      run: |
-        echo "::group::Results"
-        echo "${{ steps.scan.outputs.results }}"
-        echo "::endgroup::"
+        echo $results
       shell: bash
