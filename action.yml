@@ -16,7 +16,7 @@ inputs:
 outputs:
   results:
     description: "scan results"
-    value: "${{ steps.scan.outputs.result }}"
+    value: "${{ steps.scan.outputs.results }}"
 runs:
   using: "composite"
   steps:
@@ -31,9 +31,9 @@ runs:
         results="${results//'%'/'%25'}"
         results="${results//$'\n'/'%0A'}"
         results="${results//$'\r'/'%0D'}"
-        echo "::set-output name=result::$(echo "$results")"
+        echo "::set-output name=results::$(echo "$results")"
       shell: bash
     - name: Print Output
       id: print
-      run: echo "${{ steps.scan.outputs.result }}"
+      run: echo "${{ steps.scan.outputs.results }}"
       shell: bash
