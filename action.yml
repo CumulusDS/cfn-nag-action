@@ -38,5 +38,8 @@ runs:
       shell: bash
     - name: Print Output
       id: print
-      run: echo "${{ steps.scan.outputs.results }}"
+      run: |
+        echo "::group::Results"
+        echo "${{ steps.scan.outputs.results }}"
+        echo "::endgroup::"
       shell: bash
