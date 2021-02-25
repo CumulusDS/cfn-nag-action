@@ -1,0 +1,39 @@
+name: 'cfn-nag-action'
+description: 'executes cfn_nag_scan'
+inputs:
+  version:
+    description: 'option to specify version for install'
+    required: false
+    default: ''
+  path:
+    description: 'the path/file to be scanned'
+    required: false
+    default: '.'
+  args:
+    description: 'extra arguments'
+    required: false
+    default: '--print-suppression'
+outputs:
+  results:
+    description: "scan results"
+    value: "${{ steps.scan.outputs.result }}"
+runs:
+  using: "composite"
+  steps:
+    - name: install cfn_nag_scan
+      id: install
+      run: gem install cfn-nag --version "${{ inputs.version }}"
+      shell: bash
+    - name: scan
+      id: scan
+      run: |
+        results=$(cfn_nag_scan ${{ inputs.args }} --input-path "${{ inputs.path }}")
+        results="${results//'%'/'%25'}"
+        results="${results//$'\n'/'%0A'}"
+        results="${results//$'\r'/'%0D'}"
+        echo "::set-output name=result::$(echo "$results")"
+      shell: bash
+    - name: Print Output
+      id: print
+      run: echo "${{ steps.scan.outputs.result }}"
+      shell: bash
