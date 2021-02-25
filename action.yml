@@ -12,7 +12,7 @@ inputs:
   args:
     description: 'extra arguments'
     required: false
-    default: '--print-suppression'
+    default: '--print-suppression --output-format txt'
 outputs:
   results:
     description: "scan results"
