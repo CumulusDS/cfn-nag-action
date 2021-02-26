@@ -25,6 +25,7 @@ runs:
       run: |
         echo "::group::Installing cfn-nag"
         gem install cfn-nag --version "${{ inputs.version }}"
+        cfn_nag_scan --version
         echo "::endgroup::"
       shell: bash
     - name: scan
