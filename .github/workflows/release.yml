@@ -12,7 +12,9 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.1.0
+        uses: actions/checkout@v2.3.4
+        with:
+          fetch-depth: 0
       - name: Fetch all tags
         run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
       - name: get current version and prior versions
@@ -20,18 +22,12 @@ jobs:
         run: |
           echo "mostRecentTag=$(git tag --sort=-taggerdate | head -n1)" >> $GITHUB_ENV
           echo "priorRelease=$(curl -s -H 'Authorization: token ${{ secrets.PRIOR_VERSION_TOKEN }}' -L https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r .tag_name)" >> $GITHUB_ENV
-      - name: debug - echo things
-        run: |
-          echo "priorRelease: ${{ env.priorRelease }}"
-          echo "mostRecentTag: ${{ env.mostRecentTag }}"
-          echo "changelog directory contents:"
-          ls -l changelog
       - name: generate changelog
         id: changelog
         uses: heinrichreimer/auto-changelog-action@v2.2
         with:
           token: ${{ secrets.RELEASE_TOKEN }}
-          sinceTag: v1.3.0
+          sinceTag: ${{ env.priorRelease }}
           headerLabel: "# 📑 Changelog"
           breakingLabel: "### 💥 Breaking"
           enhancementLabel: "### 🚀 Enhancements"
