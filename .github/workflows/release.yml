@@ -55,7 +55,7 @@ jobs:
         run: cat CHANGELOG.md
       - name: Create Release
         if: success()
-        uses: ncipollo/release-action@v1.8.1
+        uses: ncipollo/release-action@v1.8.2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           prerelease: true
